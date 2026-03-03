@@ -341,10 +341,11 @@ export const fetchWithErrorHandling = async (
       }
 
       // Check if it's a session expiration error based on business error code
-      // 102002 = TOKEN_EXPIRED, 102003 = TOKEN_INVALID
+      // TOKEN_EXPIRED = "000203", TOKEN_INVALID = "000204"
+      const errorCodeStr = String(errorCode);
       if (
-        errorCode === ErrorCode.TOKEN_EXPIRED ||
-        errorCode === ErrorCode.TOKEN_INVALID
+        errorCodeStr === ErrorCode.TOKEN_EXPIRED ||
+        errorCodeStr === ErrorCode.TOKEN_INVALID
       ) {
         handleSessionExpired();
         throw new ApiError(errorCode, errorMessage);

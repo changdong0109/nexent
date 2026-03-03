@@ -7,7 +7,7 @@ This module provides two types of exceptions:
    from consts.error_code import ErrorCode
    from consts.exceptions import AppException
    
-   raise AppException(ErrorCode.VALIDATION_ERROR, "Validation failed")
+   raise AppException(ErrorCode.COMMON_VALIDATION_ERROR, "Validation failed")
    raise AppException(ErrorCode.MCP_CONNECTION_FAILED, "Connection timeout", details={"host": "localhost"})
 
 2. Legacy Framework (simple exceptions):
@@ -31,7 +31,7 @@ class AppException(Exception):
     Base application exception with ErrorCode.
 
     Usage:
-        raise AppException(ErrorCode.VALIDATION_ERROR, "Validation failed")
+        raise AppException(ErrorCode.COMMON_VALIDATION_ERROR, "Validation failed")
         raise AppException(ErrorCode.MCP_CONNECTION_FAILED, "Timeout", details={"host": "x"})
     """
 
@@ -43,7 +43,7 @@ class AppException(Exception):
 
     def to_dict(self) -> dict:
         return {
-            "code": self.error_code.value,
+            "code": int(self.error_code.value),
             "message": self.message,
             "details": self.details if self.details else None
         }

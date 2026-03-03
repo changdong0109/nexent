@@ -23,16 +23,16 @@ logger = logging.getLogger(__name__)
 def _http_status_to_error_code(status_code: int) -> ErrorCode:
     """Map HTTP status codes to internal error codes for backward compatibility."""
     mapping = {
-        400: ErrorCode.VALIDATION_ERROR,
-        401: ErrorCode.UNAUTHORIZED,
-        403: ErrorCode.FORBIDDEN,
-        404: ErrorCode.RESOURCE_NOT_FOUND,
-        429: ErrorCode.RATE_LIMIT_EXCEEDED,
-        500: ErrorCode.INTERNAL_ERROR,
-        502: ErrorCode.SERVICE_UNAVAILABLE,
-        503: ErrorCode.SERVICE_UNAVAILABLE,
+        400: ErrorCode.COMMON_VALIDATION_ERROR,
+        401: ErrorCode.COMMON_UNAUTHORIZED,
+        403: ErrorCode.COMMON_FORBIDDEN,
+        404: ErrorCode.COMMON_RESOURCE_NOT_FOUND,
+        429: ErrorCode.COMMON_RATE_LIMIT_EXCEEDED,
+        500: ErrorCode.SYSTEM_INTERNAL_ERROR,
+        502: ErrorCode.SYSTEM_SERVICE_UNAVAILABLE,
+        503: ErrorCode.SYSTEM_SERVICE_UNAVAILABLE,
     }
-    return mapping.get(status_code, ErrorCode.UNKNOWN_ERROR)
+    return mapping.get(status_code, ErrorCode.SYSTEM_UNKNOWN_ERROR)
 
 
 class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
@@ -74,7 +74,7 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
                 return JSONResponse(
                     status_code=http_status,
                     content={
-                        "code": exc.error_code.value,
+                        "code": int(exc.error_code.value),
                         "message": exc.message,
                         "trace_id": trace_id,
                         "details": exc.details if exc.details else None
@@ -88,7 +88,7 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
                 return JSONResponse(
                     status_code=exc.status_code,
                     content={
-                        "code": error_code.value,
+                        "code": int(error_code.value),
                         "message": exc.detail,
                         "trace_id": trace_id
                     }
@@ -106,8 +106,8 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
                 return JSONResponse(
                     status_code=500,
                     content={
-                        "code": ErrorCode.INTERNAL_ERROR.value,
-                        "message": ErrorMessage.get_message(ErrorCode.INTERNAL_ERROR),
+                        "code": ErrorCode.SYSTEM_INTERNAL_ERROR.value,
+                        "message": ErrorMessage.get_message(ErrorCode.SYSTEM_INTERNAL_ERROR),
                         "trace_id": trace_id,
                         "details": None
                     }
@@ -141,7 +141,7 @@ def create_error_response(
     return JSONResponse(
         status_code=status,
         content={
-            "code": error_code.value,
+            "code": int(error_code.value),
             "message": message or ErrorMessage.get_message(error_code),
             "trace_id": trace_id,
             "details": details

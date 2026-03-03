@@ -1,174 +1,219 @@
 """
 Error code definitions for the application.
 
-Format: XYYZZZ
-- X: Error level (1=System, 2=Auth, 3=Business, 4=External)
-- YY: Module number (01-99)
-- ZZZ: Error sequence (001-999)
-
-Module Numbers:
-- 01: System
-- 02: Auth
-- 03: User
-- 04: Tenant
-- 05: Agent
-- 06: Tool/MCP
-- 07: Conversation
-- 08: Memory
-- 09: Knowledge
-- 10: Model
-- 11: Voice
-- 12: File
-- 13: Invitation
-- 14: Group
-- 15: Data
-- 16: External
-- 20: Validation
-- 21: Resource
-- 22: RateLimit
+Format: XXYYZZ (6 digits, string)
+- XX: Module code (01-99, based on sidebar)
+    00: Common / 公共 - cross-module common errors
+    01: Chat / 开始问答
+    02: QuickConfig / 快速配置
+    03: AgentSpace / 智能体空间
+    04: AgentMarket / 智能体市场
+    05: AgentDev / 智能体开发
+    06: Knowledge / 知识库
+    07: MCPTools / MCP 工具
+    08: MonitorOps / 监控与运维
+    09: Model / 模型管理
+    10: Memory / 记忆管理
+    11: Profile / 个人信息
+    12: TenantResource / 租户资源
+    13: External / 外部服务 (DataMate, Dify)
+    15: Northbound / 北向接口
+    17: DataProcess / 数据处理
+    99: System / 系统级 - system internal errors
+- YY: Sub module category (01-99)
+- ZZ: Sequence in category (01-99)
 """
 
 from enum import Enum
 
 
-class ErrorCode(int, Enum):
-    """Business error codes."""
+class ErrorCode(Enum):
+    """Business error codes (stored as strings to preserve leading zeros)."""
 
-    # ==================== System Level Errors (10xxxx) ====================
-    UNKNOWN_ERROR = 101001
-    SERVICE_UNAVAILABLE = 101002
-    DATABASE_ERROR = 101003
-    TIMEOUT = 101004
-    INTERNAL_ERROR = 101005
+    # ==================== 00 Common / 公共 ====================
+    # 01 - Parameter & Validation
+    COMMON_VALIDATION_ERROR = "000101"  # Validation error
+    COMMON_PARAMETER_INVALID = "000102"  # Invalid parameter
+    COMMON_MISSING_REQUIRED_FIELD = "000103"  # Missing required field
 
-    # ==================== Auth Level Errors (102xxx) ====================
-    UNAUTHORIZED = 102001
-    TOKEN_EXPIRED = 102002
-    TOKEN_INVALID = 102003
-    SIGNATURE_INVALID = 102004
-    FORBIDDEN = 102005
+    # 02 - Auth & Permission
+    COMMON_UNAUTHORIZED = "000201"  # Not logged in / unauthenticated
+    COMMON_FORBIDDEN = "000202"  # No permission
+    COMMON_TOKEN_EXPIRED = "000203"  # Token expired
+    COMMON_TOKEN_INVALID = "000204"  # Invalid token
 
-    # ==================== User Module Errors (103xxx) ====================
-    USER_NOT_FOUND = 103001
-    USER_REGISTRATION_FAILED = 103002
-    USER_ALREADY_EXISTS = 103003
-    INVALID_CREDENTIALS = 103004
+    # 03 - External Service
+    COMMON_EXTERNAL_SERVICE_ERROR = "000301"  # External service error
+    COMMON_RATE_LIMIT_EXCEEDED = "000302"  # Rate limit exceeded
 
-    # ==================== Tenant Module Errors (104xxx) ====================
-    TENANT_NOT_FOUND = 104001
-    TENANT_DISABLED = 104002
-    TENANT_CONFIG_ERROR = 104003
+    # 04 - File
+    FILE_NOT_FOUND = "000401"  # File not found
+    FILE_UPLOAD_FAILED = "000402"  # File upload failed
+    FILE_TOO_LARGE = "000403"  # File too large
+    FILE_TYPE_NOT_ALLOWED = "000404"  # File type not allowed
+    FILE_PREPROCESS_FAILED = "000405"  # File preprocess failed
 
-    # ==================== Agent Module Errors (105xxx) ====================
-    AGENT_NOT_FOUND = 105001
-    AGENT_RUN_FAILED = 105002
-    AGENT_NAME_DUPLICATE = 105003
-    AGENT_DISABLED = 105004
-    AGENT_VERSION_NOT_FOUND = 105005
+    # 05 - Resource
+    COMMON_RESOURCE_NOT_FOUND = "000501"  # Resource not found
+    COMMON_RESOURCE_ALREADY_EXISTS = "000502"  # Resource already exists
+    COMMON_RESOURCE_DISABLED = "000503"  # Resource disabled
 
-    # ==================== Tool/MCP Module Errors (106xxx) ====================
-    TOOL_NOT_FOUND = 106001
-    TOOL_EXECUTION_FAILED = 106002
-    TOOL_CONFIG_INVALID = 106003
+    # ==================== 01 Chat / 开始问答 ====================
+    # 01 - Conversation
+    CHAT_CONVERSATION_NOT_FOUND = "010101"  # Conversation not found
+    CHAT_MESSAGE_NOT_FOUND = "010102"  # Message not found
+    CHAT_CONVERSATION_SAVE_FAILED = "010103"  # Failed to save conversation
+    CHAT_TITLE_GENERATION_FAILED = "010104"  # Failed to generate title
 
-    # MCP specific errors (1061xx)
-    MCP_CONNECTION_FAILED = 106101
-    MCP_NAME_ILLEGAL = 106102
-    MCP_CONTAINER_ERROR = 106103
+    # ==================== 02 QuickConfig / 快速配置 ====================
+    # 01 - Configuration
+    QUICK_CONFIG_INVALID = "020101"  # Invalid configuration
+    QUICK_CONFIG_SYNC_FAILED = "020102"  # Sync configuration failed
 
-    # ==================== Conversation Module Errors (107xxx) ====================
-    CONVERSATION_NOT_FOUND = 107001
-    CONVERSATION_SAVE_FAILED = 107002
-    MESSAGE_NOT_FOUND = 107003
-    CONVERSATION_TITLE_GENERATION_FAILED = 107004
+    # ==================== 03 AgentSpace / 智能体空间 ====================
+    # 01 - Agent
+    AGENTSPACE_AGENT_NOT_FOUND = "030101"  # Agent not found
+    AGENTSPACE_AGENT_DISABLED = "030102"  # Agent disabled
+    AGENTSPACE_AGENT_RUN_FAILED = "030103"  # Agent run failed
+    AGENTSPACE_AGENT_NAME_DUPLICATE = "030104"  # Duplicate agent name
+    AGENTSPACE_VERSION_NOT_FOUND = "030105"  # Agent version not found
 
-    # ==================== Memory Module Errors (108xxx) ====================
-    MEMORY_NOT_FOUND = 108001
-    MEMORY_PREPARATION_FAILED = 108002
-    MEMORY_CONFIG_INVALID = 108003
+    # ==================== 04 AgentMarket / 智能体市场 ====================
+    # 01 - Agent
+    AGENTMARKET_AGENT_NOT_FOUND = "040101"  # Agent not found in market
 
-    # ==================== Knowledge Module Errors (109xxx) ====================
-    KNOWLEDGE_NOT_FOUND = 109001
-    KNOWLEDGE_SYNC_FAILED = 109002
-    INDEX_NOT_FOUND = 109003
-    KNOWLEDGE_SEARCH_FAILED = 109004
-    KNOWLEDGE_UPLOAD_FAILED = 109005
+    # ==================== 05 AgentDev / 智能体开发 ====================
+    # 01 - Configuration
+    AGENTDEV_CONFIG_INVALID = "050101"  # Invalid agent configuration
+    AGENTDEV_PROMPT_INVALID = "050102"  # Invalid prompt
 
-    # ==================== Model Module Errors (110xxx) ====================
-    MODEL_NOT_FOUND = 110001
-    MODEL_CONFIG_INVALID = 110002
-    MODEL_HEALTH_CHECK_FAILED = 110003
-    MODEL_PROVIDER_ERROR = 110004
+    # ==================== 06 Knowledge / 知识库 ====================
+    # 01 - Knowledge Base
+    KNOWLEDGE_NOT_FOUND = "060101"  # Knowledge not found
+    KNOWLEDGE_UPLOAD_FAILED = "060102"  # Upload failed
+    KNOWLEDGE_SYNC_FAILED = "060103"  # Sync failed
+    KNOWLEDGE_INDEX_NOT_FOUND = "060104"  # Index not found
+    KNOWLEDGE_SEARCH_FAILED = "060105"  # Search failed
 
-    # ==================== Voice Module Errors (111xxx) ====================
-    VOICE_SERVICE_ERROR = 111001
-    STT_CONNECTION_FAILED = 111002
-    TTS_CONNECTION_FAILED = 111003
-    VOICE_CONFIG_INVALID = 111004
+    # ==================== 07 MCPTools / MCP 工具 ====================
+    # 01 - Tool
+    MCP_TOOL_NOT_FOUND = "070101"  # Tool not found
+    MCP_TOOL_EXECUTION_FAILED = "070102"  # Tool execution failed
+    MCP_TOOL_CONFIG_INVALID = "070103"  # Invalid tool configuration
 
-    # ==================== File Module Errors (112xxx) ====================
-    FILE_NOT_FOUND = 112001
-    FILE_UPLOAD_FAILED = 112002
-    FILE_TOO_LARGE = 112003
-    FILE_TYPE_NOT_ALLOWED = 112004
-    FILE_PREPROCESS_FAILED = 112005
+    # 02 - Connection
+    MCP_CONNECTION_FAILED = "070201"  # MCP connection failed
+    MCP_CONTAINER_ERROR = "070202"  # MCP container error
 
-    # ==================== Invitation Module Errors (113xxx) ====================
-    INVITE_CODE_NOT_FOUND = 113001
-    INVITE_CODE_INVALID = 113002
-    INVITE_CODE_EXPIRED = 113003
+    # 03 - Configuration
+    MCP_NAME_ILLEGAL = "070301"  # Illegal MCP name
 
-    # ==================== Group Module Errors (114xxx) ====================
-    GROUP_NOT_FOUND = 114001
-    GROUP_ALREADY_EXISTS = 114002
-    MEMBER_NOT_IN_GROUP = 114003
+    # ==================== 08 MonitorOps / 监控与运维 ====================
+    # 01 - Monitoring
+    MONITOROPS_METRIC_QUERY_FAILED = "080101"  # Metric query failed
 
-    # ==================== Data Process Module Errors (115xxx) ====================
-    DATA_PROCESS_FAILED = 115001
-    DATA_PARSE_FAILED = 115002
+    # 02 - Alert
+    MONITOROPS_ALERT_CONFIG_INVALID = "080201"  # Invalid alert configuration
 
-    # ==================== External Service Errors (116xxx) ====================
-    ME_CONNECTION_FAILED = 116001
-    DATAMATE_CONNECTION_FAILED = 116002
-    DIFY_SERVICE_ERROR = 116003
-    EXTERNAL_API_ERROR = 116004
+    # ==================== 09 Model / 模型管理 ====================
+    # 01 - Model
+    MODEL_NOT_FOUND = "090101"  # Model not found
+    MODEL_CONFIG_INVALID = "090102"  # Invalid model configuration
+    MODEL_HEALTH_CHECK_FAILED = "090103"  # Health check failed
+    MODEL_PROVIDER_ERROR = "090104"  # Model provider error
 
-    # Dify specific errors (1161xx) - simplified
-    DIFY_CONFIG_INVALID = 116101
-    DIFY_CONNECTION_ERROR = 116102
-    DIFY_AUTH_ERROR = 116103
-    DIFY_RATE_LIMIT = 116104
-    DIFY_RESPONSE_ERROR = 116105
+    # ==================== 10 Memory / 记忆管理 ====================
+    # 01 - Memory
+    MEMORY_NOT_FOUND = "100101"  # Memory not found
+    MEMORY_PREPARATION_FAILED = "100102"  # Memory preparation failed
+    MEMORY_CONFIG_INVALID = "100103"  # Invalid memory configuration
 
-    # ==================== Validation Errors (120xxx) ====================
-    VALIDATION_ERROR = 120001
-    PARAMETER_INVALID = 120002
-    MISSING_REQUIRED_FIELD = 120003
+    # ==================== 11 Profile / 个人信息 ====================
+    # 01 - User
+    PROFILE_USER_NOT_FOUND = "110101"  # User not found
+    PROFILE_UPDATE_FAILED = "110102"  # Profile update failed
+    PROFILE_USER_ALREADY_EXISTS = "110103"  # User already exists
+    PROFILE_INVALID_CREDENTIALS = "110104"  # Invalid credentials
 
-    # ==================== Resource Errors (121xxx) ====================
-    RESOURCE_NOT_FOUND = 121001
-    RESOURCE_ALREADY_EXISTS = 121002
-    RESOURCE_DISABLED = 121003
+    # ==================== 12 TenantResource / 租户资源 ====================
+    # 01 - Tenant
+    TENANT_NOT_FOUND = "120101"  # Tenant not found
+    TENANT_DISABLED = "120102"  # Tenant disabled
+    TENANT_CONFIG_ERROR = "120103"  # Tenant configuration error
+    TENANT_RESOURCE_EXCEEDED = "120104"  # Tenant resource exceeded
 
-    # ==================== Rate Limit Errors (122xxx) ====================
-    RATE_LIMIT_EXCEEDED = 122001
+    # ==================== 13 External / 外部服务 ====================
+    # 01 - DataMate
+    DATAMATE_CONNECTION_FAILED = "130101"  # DataMate connection failed
+
+    # 02 - Dify
+    DIFY_SERVICE_ERROR = "130201"  # Dify service error
+    DIFY_CONFIG_INVALID = "130202"  # Invalid Dify configuration
+    DIFY_CONNECTION_ERROR = "130203"  # Dify connection error
+    DIFY_AUTH_ERROR = "130204"  # Dify auth error
+    DIFY_RATE_LIMIT = "130205"  # Dify rate limit
+    DIFY_RESPONSE_ERROR = "130206"  # Dify response error
+
+    # 03 - ME Service
+    ME_CONNECTION_FAILED = "130301"  # ME service connection failed
+
+    # ==================== 14 Northbound / 北向接口 ====================
+    # 01 - Request
+    NORTHBOUND_REQUEST_FAILED = "140101"  # Northbound request failed
+
+    # 02 - Configuration
+    NORTHBOUND_CONFIG_INVALID = "140201"  # Invalid northbound configuration
+
+    # ==================== 15 DataProcess / 数据处理 ====================
+    # 01 - Task
+    DATAPROCESS_TASK_FAILED = "150101"  # Data process task failed
+    DATAPROCESS_PARSE_FAILED = "150102"  # Data parse failed
+
+    # ==================== 99 System / 系统级 ====================
+    # 01 - System Errors
+    SYSTEM_UNKNOWN_ERROR = "990101"  # Unknown error
+    SYSTEM_SERVICE_UNAVAILABLE = "990102"  # Service unavailable
+    SYSTEM_DATABASE_ERROR = "990103"  # Database error
+    SYSTEM_TIMEOUT = "990104"  # Timeout
+    SYSTEM_INTERNAL_ERROR = "990105"  # Internal error
+
+    # 02 - Config
+    CONFIG_NOT_FOUND = "990201"  # Configuration not found
+    CONFIG_UPDATE_FAILED = "990202"  # Configuration update failed
 
 
 # HTTP status code mapping
 ERROR_CODE_HTTP_STATUS = {
-    ErrorCode.UNAUTHORIZED: 401,
-    ErrorCode.TOKEN_EXPIRED: 401,
-    ErrorCode.TOKEN_INVALID: 401,
-    ErrorCode.SIGNATURE_INVALID: 401,
-    ErrorCode.FORBIDDEN: 403,
-    ErrorCode.RATE_LIMIT_EXCEEDED: 429,
-    ErrorCode.DIFY_RATE_LIMIT: 429,
-    ErrorCode.VALIDATION_ERROR: 400,
-    ErrorCode.PARAMETER_INVALID: 400,
-    ErrorCode.MISSING_REQUIRED_FIELD: 400,
+    # Common - Auth
+    ErrorCode.COMMON_UNAUTHORIZED: 401,
+    ErrorCode.COMMON_TOKEN_EXPIRED: 401,
+    ErrorCode.COMMON_TOKEN_INVALID: 401,
+    ErrorCode.COMMON_FORBIDDEN: 403,
+    # Common - Validation
+    ErrorCode.COMMON_VALIDATION_ERROR: 400,
+    ErrorCode.COMMON_PARAMETER_INVALID: 400,
+    ErrorCode.COMMON_MISSING_REQUIRED_FIELD: 400,
+    # Common - Rate Limit
+    ErrorCode.COMMON_RATE_LIMIT_EXCEEDED: 429,
+    # Common - Resource
+    ErrorCode.COMMON_RESOURCE_NOT_FOUND: 404,
+    ErrorCode.COMMON_RESOURCE_ALREADY_EXISTS: 409,
+    ErrorCode.COMMON_RESOURCE_DISABLED: 403,
+    # Common - File
+    ErrorCode.FILE_NOT_FOUND: 404,
+    ErrorCode.FILE_UPLOAD_FAILED: 500,
     ErrorCode.FILE_TOO_LARGE: 413,
+    ErrorCode.FILE_TYPE_NOT_ALLOWED: 400,
+    ErrorCode.FILE_PREPROCESS_FAILED: 500,
+    # System
+    ErrorCode.SYSTEM_SERVICE_UNAVAILABLE: 503,
+    ErrorCode.SYSTEM_TIMEOUT: 504,
+    ErrorCode.SYSTEM_DATABASE_ERROR: 500,
+    ErrorCode.SYSTEM_INTERNAL_ERROR: 500,
+    # Dify (module 13)
     ErrorCode.DIFY_CONFIG_INVALID: 400,
     ErrorCode.DIFY_AUTH_ERROR: 401,
     ErrorCode.DIFY_CONNECTION_ERROR: 502,
     ErrorCode.DIFY_RESPONSE_ERROR: 502,
+    ErrorCode.DIFY_RATE_LIMIT: 429,
 }

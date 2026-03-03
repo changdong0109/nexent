@@ -1,174 +1,207 @@
 /**
  * Error code definitions for the frontend.
  *
- * Format: XYYZZZ
- * - X: Error level (1=System, 2=Auth, 3=Business, 4=External)
- * - YY: Module number (01-99)
- * - ZZZ: Error sequence (001-999)
+ * Format: XXYYZZ (6 digits string) - Must match backend/consts/error_code.py
+ * - XX: Module code (01-99)
+ * - YY: Sub module category (01-99)
+ * - ZZ: Sequence in category (01-99)
  *
  * Module Numbers:
- * - 01: System
- * - 02: Auth
- * - 03: User
- * - 04: Tenant
- * - 05: Agent
- * - 06: Tool/MCP
- * - 07: Conversation
- * - 08: Memory
- * - 09: Knowledge
- * - 10: Model
- * - 11: Voice
- * - 12: File
- * - 13: Invitation
- * - 14: Group
- * - 15: Data
- * - 16: External
- * - 20: Validation
- * - 21: Resource
- * - 22: RateLimit
+ * - 00: Common / 公共
+ * - 01: Chat / 开始问答
+ * - 02: QuickConfig / 快速配置
+ * - 03: AgentSpace / 智能体空间
+ * - 04: AgentMarket / 智能体市场
+ * - 05: AgentDev / 智能体开发
+ * - 06: Knowledge / 知识库
+ * - 07: MCPTools / MCP 工具
+ * - 08: MonitorOps / 监控与运维
+ * - 09: Model / 模型管理
+ * - 10: Memory / 记忆管理
+ * - 11: Profile / 个人信息
+ * - 12: TenantResource / 租户资源
+ * - 13: External / 外部服务
+ * - 14: Northbound / 北向接口
+ * - 15: DataProcess / 数据处理
+ * - 99: System / 系统级
  */
 
-export enum ErrorCode {
-  // ==================== System Level Errors (10xxxx) ====================
-  UNKNOWN_ERROR = 101001,
-  SERVICE_UNAVAILABLE = 101002,
-  DATABASE_ERROR = 101003,
-  TIMEOUT = 101004,
-  INTERNAL_ERROR = 101005,
+export const ErrorCode = {
+  // ==================== 00 Common / 公共 ====================
+  // 01 - Parameter & Validation
+  VALIDATION_ERROR: "000101",
+  PARAMETER_INVALID: "000102",
+  MISSING_REQUIRED_FIELD: "000103",
 
-  // ==================== Auth Level Errors (102xxx) ====================
-  UNAUTHORIZED = 102001,
-  TOKEN_EXPIRED = 102002,
-  TOKEN_INVALID = 102003,
-  SIGNATURE_INVALID = 102004,
-  FORBIDDEN = 102005,
+  // 02 - Auth & Permission
+  UNAUTHORIZED: "000201",
+  FORBIDDEN: "000202",
+  TOKEN_EXPIRED: "000203",
+  TOKEN_INVALID: "000204",
 
-  // ==================== User Module Errors (103xxx) ====================
-  USER_NOT_FOUND = 103001,
-  USER_REGISTRATION_FAILED = 103002,
-  USER_ALREADY_EXISTS = 103003,
-  INVALID_CREDENTIALS = 103004,
+  // 03 - External Service
+  EXTERNAL_SERVICE_ERROR: "000301",
+  RATE_LIMIT_EXCEEDED: "000302",
 
-  // ==================== Tenant Module Errors (104xxx) ====================
-  TENANT_NOT_FOUND = 104001,
-  TENANT_DISABLED = 104002,
-  TENANT_CONFIG_ERROR = 104003,
+  // 04 - File
+  FILE_NOT_FOUND: "000401",
+  FILE_UPLOAD_FAILED: "000402",
+  FILE_TOO_LARGE: "000403",
+  FILE_TYPE_NOT_ALLOWED: "000404",
+  FILE_PREPROCESS_FAILED: "000405",
 
-  // ==================== Agent Module Errors (105xxx) ====================
-  AGENT_NOT_FOUND = 105001,
-  AGENT_RUN_FAILED = 105002,
-  AGENT_NAME_DUPLICATE = 105003,
-  AGENT_DISABLED = 105004,
-  AGENT_VERSION_NOT_FOUND = 105005,
+  // 05 - Resource
+  RESOURCE_NOT_FOUND: "000501",
+  RESOURCE_ALREADY_EXISTS: "000502",
+  RESOURCE_DISABLED: "000503",
 
-  // ==================== Tool/MCP Module Errors (106xxx) ====================
-  TOOL_NOT_FOUND = 106001,
-  TOOL_EXECUTION_FAILED = 106002,
-  TOOL_CONFIG_INVALID = 106003,
+  // ==================== 01 Chat / 开始问答 ====================
+  // 01 - Conversation
+  CONVERSATION_NOT_FOUND: "010101",
+  MESSAGE_NOT_FOUND: "010102",
+  CONVERSATION_SAVE_FAILED: "010103",
+  CONVERSATION_TITLE_GENERATION_FAILED: "010104",
 
-  // MCP specific errors (1061xx)
-  MCP_CONNECTION_FAILED = 106101,
-  MCP_NAME_ILLEGAL = 106102,
-  MCP_CONTAINER_ERROR = 106103,
+  // ==================== 02 QuickConfig / 快速配置 ====================
+  // 01 - Configuration
+  QUICK_CONFIG_INVALID: "020101",
+  QUICK_CONFIG_SYNC_FAILED: "020102",
 
-  // ==================== Conversation Module Errors (107xxx) ====================
-  CONVERSATION_NOT_FOUND = 107001,
-  CONVERSATION_SAVE_FAILED = 107002,
-  MESSAGE_NOT_FOUND = 107003,
-  CONVERSATION_TITLE_GENERATION_FAILED = 107004,
+  // ==================== 03 AgentSpace / 智能体空间 ====================
+  // 01 - Agent
+  AGENT_NOT_FOUND: "030101",
+  AGENT_DISABLED: "030102",
+  AGENT_RUN_FAILED: "030103",
+  AGENT_NAME_DUPLICATE: "030104",
+  AGENT_VERSION_NOT_FOUND: "030105",
 
-  // ==================== Memory Module Errors (108xxx) ====================
-  MEMORY_NOT_FOUND = 108001,
-  MEMORY_PREPARATION_FAILED = 108002,
-  MEMORY_CONFIG_INVALID = 108003,
+  // ==================== 04 AgentMarket / 智能体市场 ====================
+  // 01 - Agent
+  AGENTMARKET_AGENT_NOT_FOUND: "040101",
 
-  // ==================== Knowledge Module Errors (109xxx) ====================
-  KNOWLEDGE_NOT_FOUND = 109001,
-  KNOWLEDGE_SYNC_FAILED = 109002,
-  INDEX_NOT_FOUND = 109003,
-  KNOWLEDGE_SEARCH_FAILED = 109004,
-  KNOWLEDGE_UPLOAD_FAILED = 109005,
+  // ==================== 05 AgentDev / 智能体开发 ====================
+  // 01 - Configuration
+  AGENTDEV_CONFIG_INVALID: "050101",
+  AGENTDEV_PROMPT_INVALID: "050102",
 
-  // ==================== Model Module Errors (110xxx) ====================
-  MODEL_NOT_FOUND = 110001,
-  MODEL_CONFIG_INVALID = 110002,
-  MODEL_HEALTH_CHECK_FAILED = 110003,
-  MODEL_PROVIDER_ERROR = 110004,
+  // ==================== 06 Knowledge / 知识库 ====================
+  // 01 - Knowledge Base
+  KNOWLEDGE_NOT_FOUND: "060101",
+  KNOWLEDGE_UPLOAD_FAILED: "060102",
+  KNOWLEDGE_SYNC_FAILED: "060103",
+  INDEX_NOT_FOUND: "060104",
+  KNOWLEDGE_SEARCH_FAILED: "060105",
 
-  // ==================== Voice Module Errors (111xxx) ====================
-  VOICE_SERVICE_ERROR = 111001,
-  STT_CONNECTION_FAILED = 111002,
-  TTS_CONNECTION_FAILED = 111003,
-  VOICE_CONFIG_INVALID = 111004,
+  // ==================== 07 MCPTools / MCP 工具 ====================
+  // 01 - Tool
+  TOOL_NOT_FOUND: "070101",
+  TOOL_EXECUTION_FAILED: "070102",
+  TOOL_CONFIG_INVALID: "070103",
 
-  // ==================== File Module Errors (112xxx) ====================
-  FILE_NOT_FOUND = 112001,
-  FILE_UPLOAD_FAILED = 112002,
-  FILE_TOO_LARGE = 112003,
-  FILE_TYPE_NOT_ALLOWED = 112004,
-  FILE_PREPROCESS_FAILED = 112005,
+  // 02 - Connection
+  MCP_CONNECTION_FAILED: "070201",
+  MCP_CONTAINER_ERROR: "070202",
 
-  // ==================== Invitation Module Errors (113xxx) ====================
-  INVITE_CODE_NOT_FOUND = 113001,
-  INVITE_CODE_INVALID = 113002,
-  INVITE_CODE_EXPIRED = 113003,
+  // 03 - Configuration
+  MCP_NAME_ILLEGAL: "070301",
 
-  // ==================== Group Module Errors (114xxx) ====================
-  GROUP_NOT_FOUND = 114001,
-  GROUP_ALREADY_EXISTS = 114002,
-  MEMBER_NOT_IN_GROUP = 114003,
+  // ==================== 08 MonitorOps / 监控与运维 ====================
+  // 01 - Monitoring
+  MONITOROPS_METRIC_QUERY_FAILED: "080101",
 
-  // ==================== Data Process Module Errors (115xxx) ====================
-  DATA_PROCESS_FAILED = 115001,
-  DATA_PARSE_FAILED = 115002,
+  // 02 - Alert
+  MONITOROPS_ALERT_CONFIG_INVALID: "080201",
 
-  // ==================== External Service Errors (116xxx) ====================
-  ME_CONNECTION_FAILED = 116001,
-  DATAMATE_CONNECTION_FAILED = 116002,
-  DIFY_SERVICE_ERROR = 116003,
-  EXTERNAL_API_ERROR = 116004,
+  // ==================== 09 Model / 模型管理 ====================
+  // 01 - Model
+  MODEL_NOT_FOUND: "090101",
+  MODEL_CONFIG_INVALID: "090102",
+  MODEL_HEALTH_CHECK_FAILED: "090103",
+  MODEL_PROVIDER_ERROR: "090104",
 
-  // Dify specific errors (1161xx)
-  DIFY_CONFIG_INVALID = 116101,
-  DIFY_CONNECTION_ERROR = 116102,
-  DIFY_AUTH_ERROR = 116103,
-  DIFY_RATE_LIMIT = 116104,
-  DIFY_RESPONSE_ERROR = 116105,
+  // ==================== 10 Memory / 记忆管理 ====================
+  // 01 - Memory
+  MEMORY_NOT_FOUND: "100101",
+  MEMORY_PREPARATION_FAILED: "100102",
+  MEMORY_CONFIG_INVALID: "100103",
 
-  // ==================== Validation Errors (120xxx) ====================
-  VALIDATION_ERROR = 120001,
-  PARAMETER_INVALID = 120002,
-  MISSING_REQUIRED_FIELD = 120003,
+  // ==================== 11 Profile / 个人信息 ====================
+  // 01 - User
+  USER_NOT_FOUND: "110101",
+  USER_UPDATE_FAILED: "110102",
+  USER_ALREADY_EXISTS: "110103",
+  INVALID_CREDENTIALS: "110104",
 
-  // ==================== Resource Errors (121xxx) ====================
-  RESOURCE_NOT_FOUND = 121001,
-  RESOURCE_ALREADY_EXISTS = 121002,
-  RESOURCE_DISABLED = 121003,
+  // ==================== 12 TenantResource / 租户资源 ====================
+  // 01 - Tenant
+  TENANT_NOT_FOUND: "120101",
+  TENANT_DISABLED: "120102",
+  TENANT_CONFIG_ERROR: "120103",
+  TENANT_RESOURCE_EXCEEDED: "120104",
 
-  // ==================== Rate Limit Errors (122xxx) ====================
-  RATE_LIMIT_EXCEEDED = 122001,
+  // ==================== 13 External / 外部服务 ====================
+  // 01 - DataMate
+  DATAMATE_CONNECTION_FAILED: "130101",
+
+  // 02 - Dify
+  DIFY_SERVICE_ERROR: "130201",
+  DIFY_CONFIG_INVALID: "130202",
+  DIFY_CONNECTION_ERROR: "130203",
+  DIFY_AUTH_ERROR: "130204",
+  DIFY_RATE_LIMIT: "130205",
+  DIFY_RESPONSE_ERROR: "130206",
+
+  // 03 - ME Service
+  ME_CONNECTION_FAILED: "130301",
+
+  // ==================== 14 Northbound / 北向接口 ====================
+  // 01 - Request
+  NORTHBOUND_REQUEST_FAILED: "140101",
+
+  // 02 - Configuration
+  NORTHBOUND_CONFIG_INVALID: "140201",
+
+  // ==================== 15 DataProcess / 数据处理 ====================
+  // 01 - Task
+  DATA_PROCESS_FAILED: "150101",
+  DATA_PARSE_FAILED: "150102",
+
+  // ==================== 99 System / 系统级 ====================
+  // 01 - System Errors
+  UNKNOWN_ERROR: "990101",
+  SERVICE_UNAVAILABLE: "990102",
+  DATABASE_ERROR: "990103",
+  TIMEOUT: "990104",
+  INTERNAL_ERROR: "990105",
+
+  // 02 - Config
+  CONFIG_NOT_FOUND: "990201",
+  CONFIG_UPDATE_FAILED: "990202",
 
   // ==================== Success Code ====================
-  SUCCESS = 0,
-}
+  SUCCESS: "0",
+} as const;
+
+export type ErrorCodeType = typeof ErrorCode[keyof typeof ErrorCode];
 
 /**
  * Check if an error code represents a success.
  */
-export const isSuccess = (code: number): boolean => {
-  return code === ErrorCode.SUCCESS;
+export const isSuccess = (code: string | number): boolean => {
+  return code === ErrorCode.SUCCESS || code === 0;
 };
 
 /**
  * Check if an error code represents an authentication error.
  */
-export const isAuthError = (code: number): boolean => {
-  return code >= 102001 && code < 103000;
+export const isAuthError = (code: string | number): boolean => {
+  const codeStr = String(code);
+  return codeStr >= "000201" && codeStr < "000300";
 };
 
 /**
  * Check if an error code represents a session expiration.
  */
-export const isSessionExpired = (code: number): boolean => {
+export const isSessionExpired = (code: string | number): boolean => {
   return code === ErrorCode.TOKEN_EXPIRED || code === ErrorCode.TOKEN_INVALID;
 };

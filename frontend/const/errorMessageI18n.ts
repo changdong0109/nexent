@@ -23,7 +23,7 @@ import log from "@/lib/logger";
  * @returns The localized error message
  */
 export const getI18nErrorMessage = (
-  code: number,
+  code: string | number,
   t?: (key: string) => string
 ): string => {
   // Try i18n translation first
@@ -51,7 +51,7 @@ export const getI18nErrorMessage = (
 export const useErrorMessage = () => {
   const { t } = useTranslation();
 
-  return (code: number) => getI18nErrorMessage(code, t);
+  return (code: string | number) => getI18nErrorMessage(code, t);
 };
 
 /**
@@ -67,7 +67,7 @@ export const handleApiError = (
 ): string => {
   // Handle ApiError with code
   if (error && typeof error === "object" && "code" in error) {
-    return getI18nErrorMessage(error.code as number, t);
+    return getI18nErrorMessage(error.code as string | number, t);
   }
 
   // Handle standard Error
@@ -204,8 +204,9 @@ export const withErrorHandler = (
  * @param code - The error code
  * @returns True if user needs to re-login
  */
-export const requiresSessionRefresh = (code: number): boolean => {
-  return code === ErrorCode.TOKEN_EXPIRED || code === ErrorCode.TOKEN_INVALID;
+export const requiresSessionRefresh = (code: string | number): boolean => {
+  const codeStr = String(code);
+  return codeStr === ErrorCode.TOKEN_EXPIRED || codeStr === ErrorCode.TOKEN_INVALID;
 };
 
 /**
@@ -214,8 +215,9 @@ export const requiresSessionRefresh = (code: number): boolean => {
  * @param code - The error code
  * @returns True if it's a validation error
  */
-export const isValidationError = (code: number): boolean => {
-  return code >= 120001 && code < 121000;
+export const isValidationError = (code: string | number): boolean => {
+  const codeStr = String(code);
+  return codeStr >= "000101" && codeStr < "000200";  // 00 Common - 01 Parameter & Validation
 };
 
 /**
@@ -224,12 +226,13 @@ export const isValidationError = (code: number): boolean => {
  * @param code - The error code
  * @returns True if resource not found
  */
-export const isNotFoundError = (code: number): boolean => {
+export const isNotFoundError = (code: string | number): boolean => {
+  const codeStr = String(code);
   return (
-    code === ErrorCode.RESOURCE_NOT_FOUND ||
-    code === ErrorCode.AGENT_NOT_FOUND ||
-    code === ErrorCode.USER_NOT_FOUND ||
-    code === ErrorCode.FILE_NOT_FOUND ||
-    code === ErrorCode.KNOWLEDGE_NOT_FOUND
+    codeStr === ErrorCode.RESOURCE_NOT_FOUND ||
+    codeStr === ErrorCode.AGENT_NOT_FOUND ||
+    codeStr === ErrorCode.USER_NOT_FOUND ||
+    codeStr === ErrorCode.FILE_NOT_FOUND ||
+    codeStr === ErrorCode.KNOWLEDGE_NOT_FOUND
   );
 };
